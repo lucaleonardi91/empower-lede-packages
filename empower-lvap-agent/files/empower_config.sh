@@ -189,6 +189,7 @@ ctrl :: Socket(TCP, $MASTER_IP, $MASTER_PORT, CLIENT true, VERBOSE true, RECONNE
                                 EAUTHR eauthr,
                                 EASSOR eassor,
                                 EDEAUTHR edeauthr,
+                                MTBL mtbl,
                                 E11K e11k,
                                 RES \"$CHANNELS\",
                                 RCS \"$RCS\",
@@ -200,8 +201,18 @@ ctrl :: Socket(TCP, $MASTER_IP, $MASTER_PORT, CLIENT true, VERBOSE true, RECONNE
                                 DEBUG $DEBUG)
     -> ctrl;
 
+  mtbl :: EmpowerMulticastTable(DEBUG $DEBUG);
+
   wifi_cl [0]
     -> wifi_decap :: EmpowerWifiDecap(EL el, DEBUG $DEBUG)
+    -> MarkIPHeader(14)
+    -> igmp_cl :: IPClassifier(igmp, -);
+
+  igmp_cl[0]
+    -> EmpowerIgmpMembership(EL el, MTBL mtbl, DEBUG $DEBUG)
+    -> Discard();
+
+  igmp_cl[1]
     -> kt;
 
   wifi_decap [1] -> tee;
