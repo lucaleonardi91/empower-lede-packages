@@ -29,3 +29,10 @@ Code is released under the Apache License, Version 2.0.
   $: make menuconfig
   $: select Network -> empower-agent
 ```
+
+ATTENZIONE
+E' fondamentale cambiare le seguenti voci nel make file prima della compilazione in modo da utilizzare la versione aggiornata di empower-lvap-agent:
+
+PKG_VERSION:=20190213
+PKG_RELEASE:=1
+PKG_REV:=ffa793621d77383ad73862b4f0c9a39ae1e7edd3
